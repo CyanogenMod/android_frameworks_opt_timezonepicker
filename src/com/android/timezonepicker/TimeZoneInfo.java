@@ -46,7 +46,7 @@ public class TimeZoneInfo implements Comparable<TimeZoneInfo> {
     TimeZone mTz;
     public String mTzId;
     int mRawoffset;
-    public int[] mTransitions; // may have trailing 0's.
+    public long[] mTransitions; // may have trailing 0's.
     public String mCountry;
     public int groupId;
     public String mDisplayName;
@@ -194,15 +194,15 @@ public class TimeZoneInfo implements Comparable<TimeZoneInfo> {
         return displayName;
     }
 
-    private static int[] getTransitions(TimeZone tz, long time)
+    private static long[] getTransitions(TimeZone tz, long time)
             throws IllegalAccessException, NoSuchFieldException {
         Class<?> zoneInfoClass = tz.getClass();
         Field mTransitionsField = zoneInfoClass.getDeclaredField("mTransitions");
         mTransitionsField.setAccessible(true);
-        int[] objTransitions = (int[]) mTransitionsField.get(tz);
-        int[] transitions = null;
+        long[] objTransitions = (long[]) mTransitionsField.get(tz);
+        long[] transitions = null;
         if (objTransitions.length != 0) {
-            transitions = new int[NUM_OF_TRANSITIONS];
+            transitions = new long[NUM_OF_TRANSITIONS];
             int numOfTransitions = 0;
             for (int i = 0; i < objTransitions.length; ++i) {
                 if (objTransitions[i] < time) {
